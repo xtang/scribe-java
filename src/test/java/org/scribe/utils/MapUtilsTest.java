@@ -9,40 +9,42 @@ import org.junit.*;
 public class MapUtilsTest
 {
 
-  private Map<String, String> unsorted;
+  private Map<String, List<String>> unsorted;
 
   @Before
   public void setup()
   {
-    unsorted = new LinkedHashMap<String, String>();
-    unsorted.put("d", "fourth");
-    unsorted.put("a", "first");
-    unsorted.put("c", "third");
-    unsorted.put("b", "second");
+    unsorted = new LinkedHashMap<String, List<String>>();
+    unsorted.put("d", Arrays.asList("fourth"));
+    unsorted.put("a", Arrays.asList("first"));
+    unsorted.put("c", Arrays.asList("third"));
+    unsorted.put("b", Arrays.asList("second", "second_two", "second_one"));
   }
 
   @Test
   public void shouldSortMap()
   {
-    Map<String, String> sorted = MapUtils.sort(unsorted);
-    List<String> values = new ArrayList<String>(sorted.values());
-    assertEquals("first", values.get(0));
-    assertEquals("second", values.get(1));
-    assertEquals("third", values.get(2));
-    assertEquals("fourth", values.get(3));
+    Map<String, List<String>> sorted = MapUtils.sort(unsorted);
+    List<List<String>> values = new ArrayList<List<String>>(sorted.values());
+    assertEquals("first", values.get(0).get(0));
+    assertEquals("second", values.get(1).get(0));
+    assertEquals("second_one", values.get(1).get(1));
+    assertEquals("second_two", values.get(1).get(2));    
+    assertEquals("third", values.get(2).get(0));
+    assertEquals("fourth", values.get(3).get(0));
   }
 
   @Test
   public void shouldNotModifyTheOriginalMap()
   {
-    Map<String, String> sorted = MapUtils.sort(unsorted);
+    Map<String, List<String>> sorted = MapUtils.sort(unsorted);
     assertNotSame(sorted, unsorted);
 
-    List<String> values = new ArrayList<String>(unsorted.values());
-    assertEquals("fourth", values.get(0));
-    assertEquals("first", values.get(1));
-    assertEquals("third", values.get(2));
-    assertEquals("second", values.get(3));
+    List<List<String>> values = new ArrayList<List<String>>(unsorted.values());
+    assertEquals("fourth", values.get(0).get(0));
+    assertEquals("first", values.get(1).get(0));
+    assertEquals("third", values.get(2).get(0));
+    assertEquals("second", values.get(3).get(0));
   }
 
   @Test(expected = IllegalArgumentException.class)

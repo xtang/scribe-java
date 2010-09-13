@@ -16,18 +16,21 @@ public class URLUtils
 
   private static final String ERROR_MSG = String.format("Cannot find specified encoding: %s", UTF_8);
 
-  public static String formURLEncodeMap(Map<String, String> map)
+  public static String formURLEncodeMap(Map<String, List<String>> map)
   {
     Preconditions.checkNotNull(map, "Cannot url-encode a null object");
     return (map.size() <= 0) ? EMPTY_STRING : doFormUrlEncode(map);
   }
 
-  private static String doFormUrlEncode(Map<String, String> map)
+  private static String doFormUrlEncode(Map<String, List<String>> map)
   {
     StringBuffer encodedString = new StringBuffer();
     for (String key : map.keySet())
     {
-      encodedString.append(percentEncode(key)).append(PAIR_SEPARATOR).append(percentEncode(map.get(key))).append(PARAM_SEPARATOR);
+      for(String value: map.get(key))
+      {
+        encodedString.append(percentEncode(key)).append(PAIR_SEPARATOR).append(percentEncode(value)).append(PARAM_SEPARATOR);  
+      }
     }
     return removeTrailingSeparator(encodedString);
   }

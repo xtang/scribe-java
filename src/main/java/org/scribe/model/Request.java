@@ -19,7 +19,7 @@ class Request
 
   private String url;
   private Verb verb;
-  private Map<String, String> bodyParams;
+  private Map<String, List<String>> bodyParams;
   private Map<String, String> headers;
   private String payload = null;
   private Integer timeout = null;
@@ -35,7 +35,7 @@ class Request
   {
     this.verb = verb;
     this.url = url;
-    this.bodyParams = new HashMap<String, String>();
+    this.bodyParams = new HashMap<String, List<String>>();
     this.headers = new HashMap<String, String>();
     try
     {
@@ -108,7 +108,14 @@ class Request
    */
   public void addBodyParameter(String key, String value)
   {
-    this.bodyParams.put(key, value);
+    if(bodyParams.get(key) != null)
+    {
+      bodyParams.get(key).add(value);
+    }
+    else
+    {
+      bodyParams.put(key, Arrays.asList(value));
+    }
   }
 
   /**
@@ -131,18 +138,26 @@ class Request
    * 
    * @return a map containing the query string parameters
    */
-  public Map<String, String> getQueryStringParams()
+  public Map<String, List<String>> getQueryStringParams()
   {
     try
     {
-      Map<String, String> params = new HashMap<String, String>();
+      Map<String, List<String>> params = new HashMap<String, List<String>>();
       String query = new URL(url).getQuery();
       if (query != null)
       {
         for (String param : query.split("&"))
         {
           String pair[] = param.split("=");
-          params.put(pair[0], pair[1]);
+          String key = pair[0], value = pair[1];
+          if(params.get(key)!= null)
+          {
+            params.get(key).add(value);
+          }
+          else
+          {
+            params.put(key, Arrays.asList(value));
+          }
         }
       }
       return params;
@@ -157,7 +172,7 @@ class Request
    * 
    * @return a map containing the body parameters.
    */
-  public Map<String, String> getBodyParams()
+  public Map<String, List<String>> getBodyParams()
   {
     return bodyParams;
   }

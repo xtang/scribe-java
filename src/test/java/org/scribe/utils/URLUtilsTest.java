@@ -18,10 +18,10 @@ public class URLUtilsTest
   @Test
   public void shouldPercentEncodeMap()
   {
-    Map<String, String> params = new LinkedHashMap<String, String>();
-    params.put("key", "value");
-    params.put("key with spaces", "value with spaces");
-    params.put("&symbols!", "#!");
+    Map<String, List<String>> params = new LinkedHashMap<String, List<String>>();
+    params.put("key", Arrays.asList("value"));
+    params.put("key with spaces", Arrays.asList("value with spaces"));
+    params.put("&symbols!", Arrays.asList("#!"));
 
     String expected = "key=value&key+with+spaces=value+with+spaces&%26symbols%21=%23%21";
     assertEquals(expected, URLUtils.formURLEncodeMap(params));
@@ -30,7 +30,7 @@ public class URLUtilsTest
   @Test
   public void shouldReturnEmptyStringForEmptyMap()
   {
-    Map<String, String> params = new LinkedHashMap<String, String>();
+    Map<String, List<String>> params = new LinkedHashMap<String, List<String>>();
     String expected = "";
     assertEquals(expected, URLUtils.formURLEncodeMap(params));
   }
@@ -54,7 +54,7 @@ public class URLUtilsTest
   @Test(expected = IllegalArgumentException.class)
   public void shouldThrowExceptionIfMapIsNull()
   {
-    Map<String, String> nullMap = null;
+    Map<String, List<String>> nullMap = null;
     URLUtils.formURLEncodeMap(nullMap);
   }
 
